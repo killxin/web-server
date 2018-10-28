@@ -1,0 +1,26 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+</head>
+<body>
+
+<div id="content">
+    <h1>Register</h1>
+    <form method="POST" action="#" th:action="@{/register}" th:object="${userForm}">
+        <div class="errors" th:if="${#fields.hasErrors('*')}">
+            <ul>
+                <li th:each="err : ${#fields.errors('*')}"
+                    th:text="${err}">Input is incorrect</li>
+            </ul>
+        </div>
+        <div class="errors" th:if="${userExistsError != null}" th:text="${userExistsError}"></div>
+        <label>Email</label>:
+        <input type="text" th:field="*{email}"/><br/>
+        <label>Password</label>:
+        <input type="password" th:field="*{pwd}"/><br/>
+        <input type="submit" value="Register" />
+    </form>
+    <a th:href="@{/}">Home</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>LoginRegisterLogout</title>
+</head>
+<body>
+<div id="content">
+    <div th:if="${user != null}">
+        <h1>Welcome <span th:text="${user.email}"></span>!</h1>
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+    <div th:if="${user == null}">
+        <h1>Welcome!</h1>
+        <a th:href="@{/login}">Login</a>
+        <a th:href="@{/register}">Register</a>
+    </div>
+</div>
+</body>
+</html>
