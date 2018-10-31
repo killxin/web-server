@@ -38,7 +38,7 @@ session.remove("currentUser")
 gotoPage("home")
 ```
 
-##Spring code
+## Spring code
 ```
 @RequestMapping(value = "/login", method = POST)
 public String login(
@@ -52,7 +52,8 @@ public String login(
 }
 ```
 
-##Servlet code
+## Servlet code
+
 MyServlet.java
 ```
 @Override
@@ -66,6 +67,7 @@ public void doPost(HttpServletRequest request, HttpServletResponse response){
     dispatcher.forward(model, response);
 }
 ```
+
 web.xml
 ```
 <web-app>
@@ -80,7 +82,8 @@ web.xml
 </web-app>
 ```
 
-##Specification
+## Specification
+
 ```
 @RequestParam(String param) Object:
 context: HttpServletRequest request
