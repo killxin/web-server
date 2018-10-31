@@ -74,8 +74,8 @@ postcondition:
 
 @RequestBody() <T>:
 context: HttpServletRequest (marked as "request")
-body: 
-  5. T.getFields()->forAll(field
+postcondition: 
+  5. result.getFields()->forAll(field
       |field.equals(field.class.newInstance(request.getParameter(field.getName())))
 ```
 ## Servlet code
