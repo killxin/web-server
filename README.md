@@ -64,7 +64,7 @@ public String register(
 ```
 ## Specification
 ```
-@RequestMapping(String value, MethodEnum method)
+@RequestMapping(String value, MethodEnum method) void:
 context: java.lang.reflect.Method (marked as "this")
 postcondition: 
   1. this.url = value 
@@ -93,7 +93,7 @@ body:
   2. @Override
      public void doPost(HttpServletRequest request, HttpServletResponse response){}
   3. HttpServletRequest model = createHttpRequestFromModelMap(modelMap);
-     RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
+     RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/register.jsp");
      dispatcher.forward(model, response);
   4. HttpSession session = request.getSession();
   5. User user = new User();
