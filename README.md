@@ -38,58 +38,69 @@ session.remove("currentUser")
 gotoPage("home")
 ```
 
-## Spring code
-```
-@RequestMapping(value = "/login", method = POST)
-public String login(
-    @RequestParam("email") String email,
-    @RequestParam("pwd") String pwd,
-    ModelMap modelMap,
-    HttpSession session
-) {
-    ......
-    return "login";
-}
-```
-
-## Servlet code
-
-MyServlet.java
-```
-@Override
-public void doPost(HttpServletRequest request, HttpServletResponse response){
-    String email = request.getParameter("email");
-    String pwd = request.getParameter("pwd");
-    HttpSession session = request.getSession();
-    ......
-    HttpServletRequest model = createHttpRequestFromModelMap(modelMap);
-    RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
-    dispatcher.forward(model, response);
-}
-```
-
-web.xml
-```
-<web-app>
-   <servlet>
-      <servlet-name>MyServlet</servlet-name>
-      <servlet-class>mypkg.MyServlet</servlet-class>
-   </servlet>
-   <servlet-mapping>
-      <servlet-name>MyServlet</servlet-name>
-      <url-pattern>/login</url-pattern>
-   </servlet-mapping>
-</web-app>
-```
-
-## Specification
-
-```
-@RequestParam(String param) Object:
-context: HttpServletRequest request
-precondition: request.paramaters.containsKey(param)
-body: request.paramaters.get(param)
-```
-
 <a href="http://www.ntu.edu.sg/home/ehchua/programming/java/JavaServlets.html">
 Servlet Tutorial</a>
+
+## Spring code
+```
+public class User {
+    private String email;
+    private String pwd;
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getPwd() { return pwd; }
+    public void setPwd(String pwd) { this.pwd = pwd; }
+}
+
+@RequestMapping(value = "/register", method = POST)
+public String register(
+    @ReuqestBody User user,
+    ModelMap modelMap,
+    HttpSession session
+){
+    ......
+    return "registerForm";
+}
+```
+## Specification
+```
+@RequestMapping(String value, MethodEnum method)
+context: java.lang.reflect.Method (marked as "this")
+postcondition: 
+  1. this.url = value 
+  2. and this.requestType = method
+  3. and this.returnValue = viewSolver(modelMap, this.returnValue@pre)
+  4. and this.params->forAll(param|param.isNotAnnotated implies createIfNotExists(param))
+
+@RequestBody() <T>:
+context: HttpServletRequest (marked as "request")
+body: 
+  5. T.getFields()->forAll(field
+      |field.equals(field.class.newInstance(request.getParameter(field.getName())))
+```
+## Servlet code
+```
+  1. <web-app>
+        <servlet>
+           <servlet-name>MyServlet</servlet-name>
+           <servlet-class>mypkg.MyServlet</servlet-class>
+        </servlet>
+        <servlet-mapping>
+           <servlet-name>MyServlet</servlet-name>
+           <url-pattern>/register</url-pattern>
+        </servlet-mapping>
+     </web-app>
+  2. @Override
+     public void doPost(HttpServletRequest request, HttpServletResponse response){}
+  3. HttpServletRequest model = createHttpRequestFromModelMap(modelMap);
+     RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
+     dispatcher.forward(model, response);
+  4. HttpSession session = request.getSession();
+  5. User user = new User();
+     for(Method m : user.getClass().getMethods()){
+         if(m.getName().startsWith("set")){
+             String param = m.getName().substring("set".length());
+             m.invoke(user,request.getParamater(param));
+         }
+     }
+```
